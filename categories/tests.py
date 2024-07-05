@@ -31,6 +31,19 @@ class CategoryViewSetTests(TestCase):
             username="JaneDoe", password="secret"
         )
 
+    def test_can_list_categories(self):
+        Category.objects.create(user=self.user_1, name="meditations")
+        Category.objects.create(user=self.user_1, name="mantras")
+        Category.objects.create(user=self.user_2, name="reflections")
+
+        client = APIClient()
+        client.force_authenticate(user=self.user_1)
+        response = client.get("/api/v1/categories")
+
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[0]["name"], "meditations")
+        self.assertEqual(response.data[1]["name"], "mantras")
+
     def test_can_create_category(self):
         client = APIClient()
         client.force_authenticate(user=self.user_1)
