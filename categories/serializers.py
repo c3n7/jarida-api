@@ -7,7 +7,6 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             "id",
-            "user",
             "name",
             "created_at",
         )
