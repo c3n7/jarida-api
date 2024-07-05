@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     # local
     "users.apps.UsersConfig",
     "categories.apps.CategoriesConfig",
+    "journal_entries.apps.JournalEntriesConfig",
 ]
 
 MIDDLEWARE = [
