@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "dj_rest_auth",
     "dj_rest_auth.registration",
     # local
+    "categories.apps.CategoriesConfig",
 ]
 
 MIDDLEWARE = [
