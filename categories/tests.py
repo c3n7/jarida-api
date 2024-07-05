@@ -38,7 +38,7 @@ class CategoryViewSetTests(TestCase):
 
         client = APIClient()
         client.force_authenticate(user=self.user_1)
-        response = client.get("/api/v1/categories")
+        response = client.get("/api/v1/categories/")
 
         self.assertEqual(len(response.data), 2)
         self.assertEqual(response.data[0]["name"], "meditations")
@@ -48,7 +48,7 @@ class CategoryViewSetTests(TestCase):
         client = APIClient()
         client.force_authenticate(user=self.user_1)
         response = client.post(
-            "/api/v1/categories", {"name": "meditations"}, format="json"
+            "/api/v1/categories/", {"name": "meditations"}, format="json"
         )
 
         self.assertEqual(response.data["name"], "meditations")
@@ -57,3 +57,19 @@ class CategoryViewSetTests(TestCase):
         self.assertEqual(len(categories), 1)
         self.assertEqual(categories[0].name, "meditations")
         self.assertEqual(categories[0].user.username, "JohnDoe")
+
+    def test_can_update_category(self):
+        old_category = Category.objects.create(user=self.user_1, name="meditations")
+
+        client = APIClient()
+        client.force_authenticate(user=self.user_1)
+        response = client.put(
+            f"/api/v1/categories/{old_category.id}/",
+            {"name": "introspections"},
+            format="json",
+        )
+
+        self.assertEqual(response.data["name"], "introspections")
+
+        category = Category.objects.get(pk=old_category.id)
+        self.assertEqual(category.name, "introspections")
