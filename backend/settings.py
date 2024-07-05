@@ -156,6 +156,7 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Jarida API",
     "DESCRIPTION": "Part of the Jarida Project",
     "VERSION": "1.0.0",
+    "SCHEMA_PATH_PREFIX": r"/api/v[0-9]",
 }
 
 
