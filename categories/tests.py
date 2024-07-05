@@ -51,6 +51,7 @@ class CategoryViewSetTests(TestCase):
             "/api/v1/categories/", {"name": "meditations"}, format="json"
         )
 
+        self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data["name"], "meditations")
 
         categories = Category.objects.filter(name="meditations")
@@ -58,18 +59,38 @@ class CategoryViewSetTests(TestCase):
         self.assertEqual(categories[0].name, "meditations")
         self.assertEqual(categories[0].user.username, "JohnDoe")
 
+    def test_can_show_category(self):
+        category = Category.objects.create(user=self.user_1, name="meditations")
+        restricted_category = Category.objects.create(
+            user=self.user_2, name="introspections"
+        )
+
+        client = APIClient()
+        client.force_authenticate(user=self.user_1)
+        response = client.get(f"/api/v1/categories/{category.id}/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["name"], "meditations")
+
+        response = client.get(f"/api/v1/categories/{restricted_category.id}/")
+        self.assertEqual(response.status_code, 404)
+
     def test_can_update_category(self):
         old_category = Category.objects.create(user=self.user_1, name="meditations")
+        restricted_category = Category.objects.create(
+            user=self.user_2, name="introspections"
+        )
 
         client = APIClient()
         client.force_authenticate(user=self.user_1)
         response = client.put(
             f"/api/v1/categories/{old_category.id}/",
-            {"name": "introspections"},
+            {"name": "reflections"},
             format="json",
         )
 
-        self.assertEqual(response.data["name"], "introspections")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["name"], "reflections")
 
         category = Category.objects.get(pk=old_category.id)
-        self.assertEqual(category.name, "introspections")
+        self.assertEqual(category.name, "reflections")
