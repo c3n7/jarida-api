@@ -28,13 +28,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      
+
       - name: Run tests
         env:
           SECRET_KEY: 0d7a$lh%6i91poz8b)nhm
         run: |
           python manage.py test
-      
+
       - name: SSH to DO and Deploy
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -43,7 +43,6 @@ jobs:
           password: ${{ secrets.DO_PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            whoami
             cd /var/www/jarida-api
             git reset HEAD --hard
             git checkout main
