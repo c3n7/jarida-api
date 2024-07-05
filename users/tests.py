@@ -44,8 +44,7 @@ class UserAuthenticationTests(TestCase):
         response = client.get("/api/v1/dj-rest-auth/user/")
 
         self.assertEqual(response.status_code, 200)
-        print(response.data)
-        # self.assertIsNotNone(response.data["key"])
+        self.assertEqual(response.data["username"], "JohnDoe")
 
     # def test_can_sign_out(self) -> None:
     #     client = APIClient()
