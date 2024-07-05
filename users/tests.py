@@ -74,3 +74,16 @@ class UserAuthenticationTests(TestCase):
         self.assertEqual(user.username, "JohnDoe123")
         self.assertEqual(user.first_name, "John")
         self.assertEqual(user.last_name, "Doe")
+
+    def test_can_update_password(self) -> None:
+        client = APIClient()
+        client.force_authenticate(user=self.user)
+        response = client.post(
+            "/api/v1/dj-rest-auth/password/change/",
+            data={
+                "new_password1": "f00b@rB@Z",
+                "new_password2": "f00b@rB@Z",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
