@@ -94,3 +94,36 @@ class CategoryViewSetTests(TestCase):
 
         category = Category.objects.get(pk=old_category.id)
         self.assertEqual(category.name, "reflections")
+
+        response = client.put(
+            f"/api/v1/categories/{restricted_category.id}/",
+            {"name": "reflections"},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_can_delete_category(self):
+        category = Category.objects.create(user=self.user_1, name="meditations")
+        restricted_category = Category.objects.create(
+            user=self.user_2, name="introspections"
+        )
+
+        client = APIClient()
+        client.force_authenticate(user=self.user_1)
+        response = client.delete(
+            f"/api/v1/categories/{category.id}/",
+            {"name": "reflections"},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 204)
+
+        categories = Category.objects.filter(pk=category.id)
+        self.assertEqual(len(categories), 0)
+
+        response = client.delete(
+            f"/api/v1/categories/{restricted_category.id}/",
+        )
+
+        self.assertEqual(response.status_code, 404)
