@@ -116,3 +116,27 @@ class JournalEntryViewSetTests(TestCase):
         journal = journal[0]
         self.assertEqual(journal.title, "Foo")
         self.assertEqual(len(journal.categories.all()), 2)
+
+    def test_can_show_journal_entry(self):
+        journal_1 = JournalEntry.objects.create(
+            user=self.user_1,
+            title="Foo1",
+            content="Bar1",
+            date="2024-07-01",
+        )
+
+        for i in range(4):
+            JournalEntryCategory.objects.create(
+                journal_entry=journal_1,
+                category=Category.objects.create(
+                    user=self.user_1, name=f"category_no_{i}"
+                ),
+            )
+
+        client = APIClient()
+        client.force_authenticate(user=self.user_1)
+        response = client.get(f"/api/v1/journal_entries/{journal_1.pk}/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["title"], "Foo1")
+        self.assertEqual(len(response.data["categories"]), 4)
