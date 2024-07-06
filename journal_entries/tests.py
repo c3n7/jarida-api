@@ -176,3 +176,22 @@ class JournalEntryViewSetTests(TestCase):
         self.assertEqual(journal.content, "Bar2")
         self.assertEqual(len(journal.categories.all()), 1)
         self.assertEqual(len(Category.objects.all()), 5)
+
+    def test_can_update_journal_entry(self):
+        journal = JournalEntry.objects.create(
+            user=self.user_1,
+            title="Foo1",
+            content="Bar1",
+            date="2024-07-01",
+        )
+
+        client = APIClient()
+        client.force_authenticate(user=self.user_1)
+        response = client.delete(
+            f"/api/v1/journal_entries/{journal.pk}/",
+        )
+
+        self.assertEqual(response.status_code, 204)
+
+        journal = JournalEntry.objects.filter(pk=journal.pk)
+        self.assertTrue(not journal.exists())

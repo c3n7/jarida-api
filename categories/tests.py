@@ -112,8 +112,6 @@ class CategoryViewSetTests(TestCase):
         client.force_authenticate(user=self.user_1)
         response = client.delete(
             f"/api/v1/categories/{category.id}/",
-            {"name": "reflections"},
-            format="json",
         )
 
         self.assertEqual(response.status_code, 204)
