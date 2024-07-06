@@ -46,3 +46,28 @@ class JournalEntrySerializer(serializers.ModelSerializer):
             )
 
         return journal_entry
+
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get("title", instance.title)
+        instance.content = validated_data.get("content", instance.content)
+        instance.date = validated_data.get("date", instance.date)
+        instance.save()
+
+        added_journal_categories = []
+        for category_name in validated_data.get("category_names", []):
+            category, _ = Category.objects.get_or_create(
+                name=category_name,
+                user_id=instance.user_id,
+            )
+            journal_category, _ = JournalEntryCategory.objects.get_or_create(
+                category_id=category.pk,
+                journal_entry_id=instance.pk,
+            )
+
+            added_journal_categories.append(journal_category.pk)
+
+        JournalEntryCategory.objects.filter(journal_entry_id=instance.pk).exclude(
+            pk__in=added_journal_categories
+        ).delete()
+
+        return instance
