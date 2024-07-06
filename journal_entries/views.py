@@ -1,3 +1,14 @@
-from django.shortcuts import render
+from rest_framework import viewsets
 
-# Create your views here.
+from .models import JournalEntry
+from .serializers import JournalEntrySerializer
+
+
+class JournalEntryViewSet(viewsets.ModelViewSet):
+    serializer_class = JournalEntrySerializer
+
+    def get_queryset(self):
+        return JournalEntry.objects.filter(user__pk=self.request.user.pk)
+
+    def perform_create(self, serializer):
+        res = serializer.save(user=self.request.user)

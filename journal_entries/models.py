@@ -21,10 +21,12 @@ class JournalEntry(models.Model):
 
 class JournalEntryCategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    journal_entry = models.ForeignKey(JournalEntry, on_delete=models.CASCADE)
+    journal_entry = models.ForeignKey(
+        JournalEntry, related_name="categories", on_delete=models.CASCADE
+    )
 
     class Meta:
         verbose_name_plural = "journal entry categories"
 
     def __str__(self) -> str:
-        return f"{self.category.name} - {self.journal_entry.title}"
+        return f"{self.category.name}"
