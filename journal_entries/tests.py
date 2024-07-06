@@ -92,3 +92,27 @@ class JournalEntryViewSetTests(TestCase):
 
         self.assertEqual(response.data[1]["title"], "Foo2")
         self.assertEqual(len(response.data[1]["categories"]), 3)
+
+    def test_can_create_category(self):
+        client = APIClient()
+        client.force_authenticate(user=self.user_1)
+        response = client.post(
+            "/api/v1/journal_entries/",
+            {
+                "title": "Foo",
+                "content": "Bar",
+                "date": "2024-07-05",
+                "category_names": ["foo cat", "bar cat"],
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data["title"], "Foo")
+
+        journal = JournalEntry.objects.filter(title="Foo")
+        self.assertTrue(journal.exists())
+
+        journal = journal[0]
+        self.assertEqual(journal.title, "Foo")
+        self.assertEqual(len(journal.categories.all()), 2)
