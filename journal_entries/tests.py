@@ -83,7 +83,7 @@ class JournalEntryViewSetTests(TestCase):
 
         client = APIClient()
         client.force_authenticate(user=self.user_1)
-        response = client.get("/api/v1/journal_entries/")
+        response = client.get("/api/v1/journal-entries/")
 
         self.assertEqual(len(response.data), 2)
 
@@ -97,7 +97,7 @@ class JournalEntryViewSetTests(TestCase):
         client = APIClient()
         client.force_authenticate(user=self.user_1)
         response = client.post(
-            "/api/v1/journal_entries/",
+            "/api/v1/journal-entries/",
             {
                 "title": "Foo",
                 "content": "Bar",
@@ -135,7 +135,7 @@ class JournalEntryViewSetTests(TestCase):
 
         client = APIClient()
         client.force_authenticate(user=self.user_1)
-        response = client.get(f"/api/v1/journal_entries/{journal_1.pk}/")
+        response = client.get(f"/api/v1/journal-entries/{journal_1.pk}/")
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["title"], "Foo1")
@@ -160,7 +160,7 @@ class JournalEntryViewSetTests(TestCase):
         client = APIClient()
         client.force_authenticate(user=self.user_1)
         response = client.put(
-            f"/api/v1/journal_entries/{old_journal.pk}/",
+            f"/api/v1/journal-entries/{old_journal.pk}/",
             data={
                 "title": "Foo2",
                 "content": "Bar2",
@@ -188,7 +188,7 @@ class JournalEntryViewSetTests(TestCase):
         client = APIClient()
         client.force_authenticate(user=self.user_1)
         response = client.delete(
-            f"/api/v1/journal_entries/{journal.pk}/",
+            f"/api/v1/journal-entries/{journal.pk}/",
         )
 
         self.assertEqual(response.status_code, 204)
