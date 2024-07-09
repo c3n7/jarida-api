@@ -87,11 +87,11 @@ class JournalEntryViewSetTests(TestCase):
 
         self.assertEqual(len(response.data), 2)
 
-        self.assertEqual(response.data[0]["title"], "Foo1")
-        self.assertEqual(len(response.data[0]["categories"]), 4)
+        self.assertEqual(response.data[0]["title"], "Foo2")
+        self.assertEqual(len(response.data[0]["categories"]), 3)
 
-        self.assertEqual(response.data[1]["title"], "Foo2")
-        self.assertEqual(len(response.data[1]["categories"]), 3)
+        self.assertEqual(response.data[1]["title"], "Foo1")
+        self.assertEqual(len(response.data[1]["categories"]), 4)
 
     def test_can_create_category(self):
         client = APIClient()
