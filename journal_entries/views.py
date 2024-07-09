@@ -8,7 +8,7 @@ class JournalEntryViewSet(viewsets.ModelViewSet):
     serializer_class = JournalEntrySerializer
 
     def get_queryset(self):
-        return JournalEntry.objects.order_by("-pk").filter(
+        return JournalEntry.objects.order_by("-date").filter(
             user__pk=self.request.user.pk
         )
 
