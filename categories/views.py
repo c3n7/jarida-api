@@ -11,4 +11,4 @@ class CategoryViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
     def get_queryset(self):
-        return Category.objects.filter(user__pk=self.request.user.id)
+        return Category.objects.order_by("name").filter(user__pk=self.request.user.id)

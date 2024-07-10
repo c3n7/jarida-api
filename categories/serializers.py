@@ -8,6 +8,5 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
-            "created_at",
         )
         model = Category
