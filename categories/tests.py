@@ -40,8 +40,8 @@ class CategoryViewSetTests(TestCase):
         response = client.get("/api/v1/categories/")
 
         self.assertEqual(len(response.data), 2)
-        self.assertEqual(response.data[0]["name"], "meditations")
-        self.assertEqual(response.data[1]["name"], "mantras")
+        self.assertEqual(response.data[0]["name"], "mantras")
+        self.assertEqual(response.data[1]["name"], "meditations")
 
     def test_can_create_category(self):
         client = APIClient()
