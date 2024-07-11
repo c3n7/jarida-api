@@ -75,6 +75,27 @@ class UserAuthenticationTests(TestCase):
         self.assertEqual(user.first_name, "John")
         self.assertEqual(user.last_name, "Doe")
 
+    def test_can_update_profile_without_changing_usernam(self) -> None:
+        client = APIClient()
+        client.force_authenticate(user=self.user)
+        response = client.patch(
+            "/api/v1/dj-rest-auth/user/",
+            data={
+                "first_name": "John",
+                "last_name": "Doe",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["username"], "JohnDoe")
+        self.assertEqual(response.data["first_name"], "John")
+        self.assertEqual(response.data["last_name"], "Doe")
+
+        user = get_user_model().objects.get(pk=self.user.id)
+        self.assertEqual(user.username, "JohnDoe")
+        self.assertEqual(user.first_name, "John")
+        self.assertEqual(user.last_name, "Doe")
+
     def test_can_update_password(self) -> None:
         client = APIClient()
         client.force_authenticate(user=self.user)
